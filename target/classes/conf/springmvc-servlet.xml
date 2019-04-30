@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:beans="http://www.springframework.org/schema/beans"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xmlns:mvc="http://www.springframework.org/schema/mvc" xmlns:p="http://www.springframework.org/schema/p"
+       xsi:schemaLocation="http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc-4.3.xsd
+        http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.3.xsd
+        http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd">
+    <!-- 配置handlerMapping -->
+    <bean class="org.springframework.web.servlet.mvc.support.ControllerBeanNameHandlerMapping"></bean>
+    <!-- 配置视图解析器 -->
+    <bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+        <!-- 前缀 :说明如果直接放在web-inf下，不需要加前缀-->
+        <property name="prefix" value="WEB-INF/views/"></property>
+        <!-- 后缀 ： -->
+        <property name="suffix" value=".jsp"></property>
+    </bean>
+    <mvc:interceptors>
+        <!-- 日志拦截器 -->
+        <mvc:interceptor>
+            <mvc:mapping path="/**" />
+            <mvc:exclude-mapping path="/errorPage" />
+            <!--<mvc:exclude-mapping path="/static/**" />-->
+            <bean class="xyz.haibofaith.basemvc.web.interceptors.SecurityInterceptor" />
+        </mvc:interceptor>
+    </mvc:interceptors>
+
+    <!-- 加入注解驱动 -->
+    <mvc:annotation-driven></mvc:annotation-driven>
+
+    <!-- 扫描器 -->
+    <context:component-scan base-package="xyz.haibofaith.basemvc.web"></context:component-scan>
+    <context:component-scan base-package="com.crcb.controller"></context:component-scan>
+    <aop:aspectj-autoproxy proxy-target-class="true"/>
+    <bean id="LogAspect" class="com.crcb.aop.LogAspect"></bean>
+</beans>
